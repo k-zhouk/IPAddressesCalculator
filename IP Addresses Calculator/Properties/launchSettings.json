@@ -2,7 +2,7 @@
   "profiles": {
     "IP Addresses Calculator": {
       "commandName": "Project",
-      "commandLineArgs": "10.10.1.44/30"
+      "commandLineArgs": "-s 55"
     }
   }
 }

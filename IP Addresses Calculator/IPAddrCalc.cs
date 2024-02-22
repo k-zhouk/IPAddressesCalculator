@@ -15,7 +15,7 @@ namespace IP_Addresses_Calculator
             ConsoleColor consoleOriginalColor = Console.ForegroundColor;
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("No warranties provided. Use at your own risk");
+            Console.WriteLine("\nNo warranties provided. Use at your own risk");
             Console.ForegroundColor = consoleOriginalColor;
 
             Console.WriteLine("\n******************** IP Address Calculator (ver. {0}) ********************\n", GetProgramVersion());
@@ -115,6 +115,7 @@ namespace IP_Addresses_Calculator
                 if (args[0].ToUpper() == "-S" && int.TryParse(args[1], out int recordNumber))
                 {
                     ShowHistoryRecord(recordNumber);
+                    Environment.Exit(0);
                 }
 
                 // There could be a space between the IP address and the mask. Let's give it one more chance...
