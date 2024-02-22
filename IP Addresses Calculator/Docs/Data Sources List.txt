@@ -1,0 +1,7 @@
+﻿I. IPv4 Network classes
+
+Kevin R. Fall "TCIP/IP Illustrated, Volume 1. The protocols", 2nd ed., 2012, page 36.
+
+II. "Subnet Cheat Sheet – 24 Subnet Mask, 30, 26, 27, 29, and other IP Address CIDR Network References"
+Kris Koishigawa
+https://www.freecodecamp.org/news/subnet-cheat-sheet-24-subnet-mask-30-26-27-29-and-other-ip-address-cidr-network-references/
