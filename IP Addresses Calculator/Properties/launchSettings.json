@@ -2,7 +2,7 @@
   "profiles": {
     "IP Addresses Calculator": {
       "commandName": "Project",
-      "commandLineArgs": "-s 55"
+      "commandLineArgs": "-m 255.255.255.248"
     }
   }
 }

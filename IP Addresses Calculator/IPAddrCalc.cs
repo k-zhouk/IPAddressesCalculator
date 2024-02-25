@@ -41,31 +41,35 @@ namespace IP_Addresses_Calculator
                 {
                     switch (argParameter)
                     {
+                        // Option shows the version of the program
                         case "-V":
                             {
                                 Console.WriteLine("IP Address Calculator version: {0}", GetProgramVersion());
                                 Environment.Exit(0);
                                 break;
                             }
+                        // Option prints usage help
                         case "-U":
                             {
                                 PrintHelp();
                                 Environment.Exit(0);
                                 break;
                             }
+                        // Option clears the usage history
                         case "-C":
                             {
                                 ClearHistory();
                                 Environment.Exit(0);
                                 break;
                             }
-
+                        // Options displays the usage history
                         case "-H":
                             {
                                 ShowHistory(0);
                                 Environment.Exit(0);
                                 break;
                             }
+                        // Options displays the N-th record
                         case "-S":
                             {
                                 PrintErrorMessage($"History record number is missing", consoleOriginalColor);
@@ -107,14 +111,32 @@ namespace IP_Addresses_Calculator
             // Case 3: 2 arguments have been provided
             if (args.Length == 2)
             {
+                // Processing the "-h" option with a numerical parameter
                 if (args[0].ToUpper() == "-H" && int.TryParse(args[1], out int historyRecords))
                 {
                     ShowHistory(historyRecords);
                 }
 
+                // Processing the "-s" option with a numerical parameter
                 if (args[0].ToUpper() == "-S" && int.TryParse(args[1], out int recordNumber))
                 {
                     ShowHistoryRecord(recordNumber);
+                    Environment.Exit(0);
+                }
+
+                // Processing the "-m" option with the mask in CIDR of 4 bytes format
+                if (args[0].ToUpper() == "-M")
+                {
+                    IPv4SubnetMask? mask = ParseSubnetMaskString(args[1]);
+                    if(mask is null)
+                    {
+                        PrintErrorMessage($"The mask provided is not valid\n", consoleOriginalColor);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{"The mask in 4 bytes format: ",INFO_ALIGN}{mask.ToString()}");
+                        Console.WriteLine($"{"The mask in CIDR format: ",INFO_ALIGN}{mask.CIDR.ToString()}\n");
+                    }
                     Environment.Exit(0);
                 }
 

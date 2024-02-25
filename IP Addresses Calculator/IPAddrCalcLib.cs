@@ -373,13 +373,13 @@ namespace IP_Addresses_Calculator
         {
             // Shifting the bits to the right until we meet the 1st bit set
             int i = 0;
-            do
+            while(mask % 2 == 0)
             {
                 mask >>= 1;
                 i++;
-            } while (mask % 2 == 0);
+            }
 
-            // Testing every bit whether it's 1 or 0. If the bit is 0, the mask is wrong
+            // Testing every bit whether it's 1 or 0. If the bit is 0, then the mask is not valid
             for (int j = 0; j < 32 - i; j++)
             {
                 if ((mask & 0x1) != 1) return false;
@@ -417,8 +417,10 @@ namespace IP_Addresses_Calculator
             Console.WriteLine($"-h N         --> for the last N history entries");
             Console.WriteLine($"-s N         --> to show details of the Nth history item");
             Console.WriteLine($"-c           --> to clear the history");
+            Console.WriteLine($"-m           --> convert from CIDR to 4 bytes notation and vice versa");
+            Console.WriteLine($"For the \"-m\" option use as ipaddrcalc -m 32 OR ipaddrcalc -m 255.255.0.0\n");
         }
-
+        
         /// <summary>
         /// The method prints the error message in red color. After pringing, the original color of the console text is set back
         /// </summary>
