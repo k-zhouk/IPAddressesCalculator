@@ -72,7 +72,13 @@ namespace IP_Addresses_Calculator
                         // Options displays the N-th record
                         case "-S":
                             {
-                                PrintErrorMessage($"History record number is missing", consoleOriginalColor);
+                                PrintErrorMessage($"History record number is missing for the \"-s\" key", consoleOriginalColor);
+                                Environment.Exit(0);
+                                break;
+                            }
+                        case "-M":
+                            {
+                                PrintErrorMessage($"Mask as a parameter is missing for the \"-m\" key", consoleOriginalColor);
                                 Environment.Exit(0);
                                 break;
                             }

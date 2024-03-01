@@ -413,7 +413,7 @@ namespace IP_Addresses_Calculator
             Console.WriteLine($"\nOther options (could be both in upper and lower case):");
             Console.WriteLine($"-v           --> for program version");
             Console.WriteLine($"-u           --> for usage");
-            Console.WriteLine($"-h           --> for full history");
+            Console.WriteLine($"-h           --> for the full history");
             Console.WriteLine($"-h N         --> for the last N history entries");
             Console.WriteLine($"-s N         --> to show details of the Nth history item");
             Console.WriteLine($"-c           --> to clear the history");
