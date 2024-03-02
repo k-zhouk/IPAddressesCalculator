@@ -23,7 +23,7 @@ namespace IPAddrCalc_Tests.Other_Tests
         public void ShouldBeFalseIfInputStringIsNull()
         {
             // Arrange
-            string testString = null;
+            string? testString = null;
 
             // Act
             bool isValid = IsStringValidForProcessing(testString);

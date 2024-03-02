@@ -37,7 +37,7 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
             IPv4SubnetMask? parseResult = ParseSubnetMaskString(mask);
 
             // Assert
-            Assert.Equal((uint)0, parseResult.CIDR);
+            Assert.Equal((uint)0, parseResult?.CIDR);
 
             _output.WriteLine("CIDR mask to parse: {0}", mask);
             _output.WriteLine("CIDR of the object: {0}", parseResult.CIDR);
@@ -47,17 +47,17 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         public void ShouldPassForRandomCIDRMask()
         {
             // Arrange
-            Random rnd = new Random();
+            Random rnd = new();
 
             // The mask is in the range from 1 to 31
-            int randomCidr= rnd.Next(1, 32);
-            string mask= randomCidr.ToString();
+            int randomCidr = rnd.Next(1, 32);
+            string mask = randomCidr.ToString();
 
             // Act
             IPv4SubnetMask? parseResult = ParseSubnetMaskString(mask);
 
             // Check for null just in case
-            if(parseResult is null)
+            if (parseResult is null)
             {
                 throw new ArgumentNullException("The parse method returned null!");
             }
@@ -91,7 +91,7 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         public void ShouldBeNullForCidrMaskGreaterThan32()
         {
             // Arrange
-            Random rnd = new Random();
+            Random rnd = new();
             int randomCidr = rnd.Next(33, 256);
             string mask = randomCidr.ToString();
 
@@ -104,7 +104,7 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         #endregion
 
         #region Test other methods to process a subnet mask
-        
+
         [Fact]
         public void ShouldBeTrueForAClassMask()
         {
@@ -170,13 +170,15 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         public void ShouldBeFalseForNonValidkMask1()
         {
             // Arrange
-            string testStringMask = "100.0.0.0";
+            // Subnet mask to test is "100.0.0.0"
             // BIN for of this mask is 01100100.00000000.00000000.00000000
+            // HEX of the testMask is 0x64000000
 
             // Manual setup of the non-valid mask
-            IPv4SubnetMask testMask = new();
-            // Hex of the testMask is 0x64000000
-            testMask.CIDR = 0x64000000;
+            IPv4SubnetMask testMask = new()
+            {
+                CIDR = 0x64000000
+            };
 
             // Act
             bool isValid = IsSubnetMaskValid(testMask.CIDR);
@@ -190,16 +192,18 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         public void ShouldBeFalseForNonValidMask2()
         {
             // Arrange
-            string testStringMask = "255.255.255.253";
+            // Test mask is 255.255.255.253
             // BIN for this mask is 11111111.11111111.11111111.11111101
+            // HEX of the testMask is 0x64000000
 
             // Manual setup of non-valid mas
-            IPv4SubnetMask testMask = new();
-            // Hex of the testMask is 0x64000000
-            testMask.CIDR = 0xFFFFFFFD;
+            IPv4SubnetMask testMask = new()
+            {
+                CIDR = 0xFFFFFFFD
+            };
 
             // Act
-            bool isValid= IsSubnetMaskValid(testMask.CIDR);
+            bool isValid = IsSubnetMaskValid(testMask.CIDR);
 
             // Assert
             Assert.False(isValid);

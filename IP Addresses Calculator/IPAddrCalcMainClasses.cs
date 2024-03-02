@@ -3,7 +3,7 @@
     // Class to represent an IPv4 address
     public class IPv4Address
     {
-        private const uint UINT_INITIALIZER= 100500;
+        private const uint UINT_INITIALIZER = 100500;
 
         // Default constructor
         public IPv4Address() { }
@@ -130,12 +130,28 @@
         #endregion
 
         // Property represents the IP address as a BIN string
-        public string IPAddressAsBinString { get; private set; }
+        private string _IPAddressAsBinString = string.Empty;
+        public string IPAddressAsBinString
+        {
+            get => _IPAddressAsBinString;
+            private set
+            {
+                _IPAddressAsBinString = value;
+            }
+        }
 
         // The method returns the IP address as a BIN string
         public string ToBinString() => IPAddressAsBinString;
 
-        public string IPAddressAsString { get; private set; }
+        private string _IPAddressAsString = string.Empty;
+        public string IPAddressAsString
+        {
+            get => _IPAddressAsString;
+            private set
+            {
+                _IPAddressAsString = value;
+            }
+        }
 
         // Overriding the ToString() method, so it returns the IP address in a standard way
         public override string ToString() => IPAddressAsString;
@@ -159,10 +175,10 @@
         }
 
         // Operators overload to compare 2 IPv4Address
-        public static bool operator ==(IPv4Address left, IPv4Address right) => left.IPAddress == right.IPAddress;
-        public static bool operator !=(IPv4Address left, IPv4Address right) => left.IPAddress != right.IPAddress;
-        public static bool operator <=(IPv4Address left, IPv4Address right) => left.IPAddress <= right.IPAddress;
-        public static bool operator >=(IPv4Address left, IPv4Address right) => left.IPAddress >= right.IPAddress;
+        public static bool operator ==(IPv4Address? left, IPv4Address? right) => left.IPAddress == right.IPAddress;
+        public static bool operator !=(IPv4Address? left, IPv4Address? right) => left.IPAddress != right.IPAddress;
+        public static bool operator <=(IPv4Address? left, IPv4Address? right) => left.IPAddress <= right.IPAddress;
+        public static bool operator >=(IPv4Address? left, IPv4Address? right) => left.IPAddress >= right.IPAddress;
     }
 
     // Class to represent an IPv4 submask
@@ -201,15 +217,15 @@
         {
             // Calculating the number of the CIDR bits by shifting the mask to the right until we find the first 1
             uint tempMask = SubnetMask;
-            
-            uint j = 0;
+
+            uint i = 0;
             while (tempMask % 2 == 0)
             {
-                tempMask = tempMask >> 1;
-                j++;
-            } 
+                tempMask >>= 1;
+                i++;
+            }
 
-            CIDR = 32 - j;
+            CIDR = 32 - i;
         }
 
         // The method converts the subnet mask represented in the CIDR notation into an uint number
@@ -249,7 +265,7 @@
         }
 
         // The property represents the subnet mask as an uint
-        uint _subnetMask= default;
+        uint _subnetMask = default;
         public uint SubnetMask
         {
             get => _subnetMask;
@@ -265,7 +281,7 @@
         }
 
         // The property represents the subnet mask in the CIDR notation
-        uint _cidr= default;
+        uint _cidr = default;
         public uint CIDR
         {
             get => _cidr;
@@ -284,12 +300,55 @@
         public byte ThirdByte { get; private set; }
         public byte FourthByte { get; private set; }
 
-        public string FirstByteBin { get; private set; }
-        public string SecondByteBin { get; private set; }
-        public string ThirdByteBin { get; private set; }
-        public string FourthByteBin { get; private set; }
+        private string _firstByteBin = string.Empty;
+        public string FirstByteBin
+        {
+            get => _firstByteBin;
+            private set
+            {
+                _firstByteBin = value;
+            }
+        }
 
-        public string SubnetMaskBin { get; private set; }
+        private string _secondByteBin = string.Empty;
+        public string SecondByteBin
+        {
+            get => _secondByteBin;
+            private set
+            {
+                _secondByteBin = value;
+            }
+        }
+
+        private string _thirdByteBin = string.Empty;
+        public string ThirdByteBin
+        {
+            get => _thirdByteBin;
+            private set
+            {
+                _thirdByteBin = value;
+            }
+        }
+
+        private string _fourthByteBin = string.Empty;
+        public string FourthByteBin
+        {
+            get => _fourthByteBin;
+            private set
+            {
+                _fourthByteBin = value;
+            }
+        }
+
+        private string _subnerMaskBin = string.Empty;
+        public string SubnetMaskBin
+        {
+            get => _subnerMaskBin;
+            private set
+            {
+                _subnerMaskBin = value;
+            }
+        }
 
         public string ToBinString() => SubnetMaskBin;
 
