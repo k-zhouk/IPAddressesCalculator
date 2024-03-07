@@ -5,6 +5,24 @@ namespace IP_Addresses_Calculator
     public static class IPAddrCalcLib
     {
         /// <summary>
+        /// The method returns the network part of the IP address
+        /// </summary>
+        /// <param name="address">IPv4Address object</param>
+        /// <param name="mask">IPv4SubnetMask object</param>
+        /// <returns>Network part of the IP address as an uint number</returns>
+        public static uint GetNetworkPart(IPv4Address address, IPv4SubnetMask mask)
+        {
+            uint networkPart = address.IPAddress & mask.SubnetMask;
+
+            // Getting the network part
+            while (networkPart % 2 == 0)
+            {
+                networkPart = networkPart >> 1;
+            }
+            return networkPart;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="address"></param>

@@ -170,11 +170,35 @@ namespace IP_Addresses_Calculator
             }
 
             // Case 4: 3 arguments
+            // TODO: Implement
             if (args.Length == 3)
             {
+                // If the 1st argument is "-a", then try to parse the adresses and mask
                 if (args[0] == "-a")
                 {
+                    string[] tmpArray= args[1].Split("/");
+                    IPv4Address? firstAddress= ParseInputIPAddress(tmpArray[0]);
+                    IPv4SubnetMask? firstMask= ParseSubnetMaskString(tmpArray[1]);
 
+                    tmpArray = args[2].Split("/");
+                    IPv4Address? secondAddress = ParseInputIPAddress(tmpArray[0]);
+                    IPv4SubnetMask? secondMask = ParseSubnetMaskString(tmpArray[1]);
+
+                    uint firstNetwork = GetNetworkPart(firstAddress, firstMask);
+                    uint secondNetwrok= GetNetworkPart(secondAddress, secondMask);
+
+                    Console.WriteLine($"{"First address:",INFO_ALIGN} {firstAddress.IPAddressAsString}");
+                    Console.WriteLine($"{"Second address:", INFO_ALIGN} {secondAddress.IPAddressAsString}\n");
+
+                    if (firstNetwork!= secondNetwrok)
+                    {
+                        Console.WriteLine($"The IP addresses don't belong to the same network\n");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"The IP addresses are in the same network\n");
+                    }
+                    Environment.Exit(0);
                 }
             }
 
