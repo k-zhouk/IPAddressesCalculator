@@ -6,10 +6,13 @@ namespace IPAddrCalc_Tests.NetworkClasses
     public class TestClassDNetworks
     {
         #region General tests for the class D networks
-        // IP address: between 224.0.0.0 (0xE0000) and 239.255.255.255 (0xEFFFFFFF)
+        /* 
+         * Range:           224.0.0.0 (0xE0000) ~ 239.255.255.255 (0xEFFFFFFF)
+         * Subnet Mask:     No
+        */
 
         [Fact]
-        public void ShouldBeNotEqualIfAddressLessThanLowestDlassDAddr()
+        public void ShouldBeNotEqualIfAddressLessThanLowestDClassAddr()
         {
             // Arrange
             string testAddr = "223.255.225.255";
