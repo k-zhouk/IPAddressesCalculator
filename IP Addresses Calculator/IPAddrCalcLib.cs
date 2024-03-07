@@ -5,12 +5,30 @@ namespace IP_Addresses_Calculator
     public static class IPAddrCalcLib
     {
         /// <summary>
+        /// The method returns the network part of the IP address
+        /// </summary>
+        /// <param name="address">IPv4Address object</param>
+        /// <param name="mask">IPv4SubnetMask object</param>
+        /// <returns>Network part of the IP address as an uint number</returns>
+        public static uint GetNetworkPart(IPv4Address address, IPv4SubnetMask mask)
+        {
+            uint networkPart = address.IPAddress & mask.SubnetMask;
+
+            // Getting the network part
+            while (networkPart % 2 == 0)
+            {
+                networkPart = networkPart >> 1;
+            }
+            return networkPart;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="address"></param>
         /// <param name="mask"></param>
         /// <returns></returns>
-        public static uint GetTotalNumberOfIPAddresses(IPv4SubnetMask mask)
+        public static uint GetTotalNumberOfIPAddresses(IPv4SubnetMask? mask)
         {
             uint shifts = 32 - mask.CIDR;
 
@@ -43,7 +61,7 @@ namespace IP_Addresses_Calculator
             IPv4Address lastAddress = GetFirstIPAddress(address, mask);
 
             uint shifts = 32 - mask.CIDR;
-            uint total= GetMaxNumberForBits(shifts);
+            uint total = GetMaxNumberForBits(shifts);
 
             lastAddress.IPAddress += total;
 
@@ -129,10 +147,12 @@ namespace IP_Addresses_Calculator
         /// </summary>
         /// <param name="mask">IPv4SubnetMask object</param>
         /// <returns>True/ false</returns>
-        public static bool IsClassAMask(IPv4SubnetMask mask)
+        public static bool IsClassAMask(IPv4SubnetMask? mask)
         {
-            if (mask.SubnetMask == 0xFF000000) return true;
-
+            if (mask is not null)
+            {
+                if (mask.SubnetMask == 0xFF000000) return true;
+            }
             return false;
         }
 
@@ -141,10 +161,12 @@ namespace IP_Addresses_Calculator
         /// </summary>
         /// <param name="mask">IPv4SubnetMask object</param>
         /// <returns>True/ false</returns>
-        public static bool IsClassBMask(IPv4SubnetMask mask)
+        public static bool IsClassBMask(IPv4SubnetMask? mask)
         {
-            if (mask.SubnetMask == 0xFFFF0000) return true;
-
+            if (mask is not null)
+            {
+                if (mask.SubnetMask == 0xFFFF0000) return true;
+            }
             return false;
         }
 
@@ -153,10 +175,12 @@ namespace IP_Addresses_Calculator
         /// </summary>
         /// <param name="mask">IPv4SubnetMask object</param>
         /// <returns>True/ false</returns>
-        public static bool IsClassCMask(IPv4SubnetMask mask)
+        public static bool IsClassCMask(IPv4SubnetMask? mask)
         {
-            if (mask.SubnetMask == 0xFFFFFF00) return true;
-
+            if (mask is not null)
+            {
+                if (mask.SubnetMask == 0xFFFFFF00) return true;
+            }
             return false;
         }
 
@@ -165,20 +189,20 @@ namespace IP_Addresses_Calculator
         /// </summary>
         /// <param name="iPv4Address"></param>
         /// <returns>Char 'A'/ 'B'/ 'C'/ 'D'/ 'E' or information if the combination of the IPv4 address and mask is not valid</returns>
-        public static string GetIPv4NetworkClass(IPv4Address iPv4Address, IPv4SubnetMask subnetMask)
+        public static string GetIPv4NetworkClass(IPv4Address? iPv4Address, IPv4SubnetMask? subnetMask)
         {
-            IPv4Address? lowerAddress = new IPv4Address();
-            IPv4Address? upperAddress = new IPv4Address();
-
             // Class A network:
             // IP address: between 1.0.0.0 (0x01000000) and 127.255.255.255 (0x7FFFFFFF)
             // Subnet mask: 255.0.0.0
-            lowerAddress = ParseInputIPAddress("1.0.0.0");
-            upperAddress = ParseInputIPAddress("127.255.255.255");
+            IPv4Address? lowerAddress = ParseInputIPAddress("1.0.0.0");
+            IPv4Address? upperAddress = ParseInputIPAddress("127.255.255.255");
 
-            if (((iPv4Address >= lowerAddress) & (iPv4Address <= upperAddress)) & IsClassAMask(subnetMask))
+            if ((lowerAddress is not null) && (upperAddress is not null))
             {
-                return "A";
+                if ((iPv4Address >= lowerAddress) & (iPv4Address <= upperAddress) & IsClassAMask(subnetMask))
+                {
+                    return "A";
+                }
             }
 
             // Class B netwrok:
@@ -187,7 +211,7 @@ namespace IP_Addresses_Calculator
             lowerAddress = ParseInputIPAddress("128.0.0.0");
             upperAddress = ParseInputIPAddress("191.255.255.255");
 
-            if (((iPv4Address >= lowerAddress) & (iPv4Address <= upperAddress)) & IsClassBMask(subnetMask))
+            if ((iPv4Address >= lowerAddress) & (iPv4Address <= upperAddress) & IsClassBMask(subnetMask))
             {
                 return "B";
             }
@@ -210,7 +234,7 @@ namespace IP_Addresses_Calculator
 
             if ((iPv4Address >= lowerAddress) & (iPv4Address <= upperAddress))
             {
-                return "D (multicast address)";
+                return "D";
             }
 
             // Class E netwrok:
@@ -220,7 +244,7 @@ namespace IP_Addresses_Calculator
 
             if ((iPv4Address >= lowerAddress) & (iPv4Address <= upperAddress))
             {
-                return "E (epxerimental address)";
+                return "E";
             }
 
             return "No specific class (CIDR notation)";
@@ -373,7 +397,7 @@ namespace IP_Addresses_Calculator
         {
             // Shifting the bits to the right until we meet the 1st bit set
             int i = 0;
-            while(mask % 2 == 0)
+            while (mask % 2 == 0)
             {
                 mask >>= 1;
                 i++;
@@ -419,8 +443,10 @@ namespace IP_Addresses_Calculator
             Console.WriteLine($"-c           --> to clear the history");
             Console.WriteLine($"-m           --> convert from CIDR to 4 bytes notation and vice versa");
             Console.WriteLine($"For the \"-m\" option use as ipaddrcalc -m 32 OR ipaddrcalc -m 255.255.0.0\n");
+            Console.WriteLine($"-a           --> to checke whether 2 addresses are on the same network");
+            Console.WriteLine($"For the \"-a\" option use as ipaddrcalc -a 100.101.102.103/24 100.101.102.1/24\n");
         }
-        
+
         /// <summary>
         /// The method prints the error message in red color. After pringing, the original color of the console text is set back
         /// </summary>

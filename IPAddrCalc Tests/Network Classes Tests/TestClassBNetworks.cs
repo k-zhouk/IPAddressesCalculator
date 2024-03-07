@@ -52,8 +52,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "127.255.225.255";
             string testMask = "255.255.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             string networkClass = GetIPv4NetworkClass(addr, mask);
@@ -69,8 +69,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "128.0.0.0";
             string testMask = "255.255.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             string networkClass = GetIPv4NetworkClass(addr, mask);
@@ -85,7 +85,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
             // Arrange
 
             // Generation of a random B class network address
-            Random rng = new Random();
+            Random rng = new();
             string firstByte = ((byte)rng.Next(128, 192)).ToString();
             string secondByte = ((byte)rng.Next(256)).ToString();
             string thirdByte = ((byte)rng.Next(256)).ToString();
@@ -93,10 +93,10 @@ namespace IPAddrCalc_Tests.NetworkClasses
 
             string testAddr = firstByte + '.' + secondByte + '.' + thirdByte + '.' + fourthByte;
 
-            IPv4Address addrs = ParseInputIPAddress(testAddr);
+            IPv4Address? addrs = ParseInputIPAddress(testAddr);
 
             string testMask = "255.255.0.0";
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             string networkClass = GetIPv4NetworkClass(addrs, mask);
@@ -112,8 +112,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "191.255.255.255";
             string testMask = "255.255.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             string networkClass = GetIPv4NetworkClass(addr, mask);
@@ -129,8 +129,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "192.0.0.0";
             string testMask = "255.255.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             string networkClass = GetIPv4NetworkClass(addr, mask);

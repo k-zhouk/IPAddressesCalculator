@@ -134,7 +134,7 @@ namespace IP_Addresses_Calculator
                 if (args[0].ToUpper() == "-M")
                 {
                     IPv4SubnetMask? mask = ParseSubnetMaskString(args[1]);
-                    if(mask is null)
+                    if (mask is null)
                     {
                         PrintErrorMessage($"The mask provided is not valid\n", consoleOriginalColor);
                     }
@@ -169,8 +169,41 @@ namespace IP_Addresses_Calculator
                 ProcessIPAddressAndMask(iPv4Address, subnetMask);
             }
 
-            // Case 4: 3 or more 2 arguments have been provided
-            if (args.Length >= 3)
+            // Case 4: 3 arguments
+            // TODO: Implement
+            if (args.Length == 3)
+            {
+                // If the 1st argument is "-a", then try to parse the adresses and mask
+                if (args[0] == "-a")
+                {
+                    string[] tmpArray= args[1].Split("/");
+                    IPv4Address? firstAddress= ParseInputIPAddress(tmpArray[0]);
+                    IPv4SubnetMask? firstMask= ParseSubnetMaskString(tmpArray[1]);
+
+                    tmpArray = args[2].Split("/");
+                    IPv4Address? secondAddress = ParseInputIPAddress(tmpArray[0]);
+                    IPv4SubnetMask? secondMask = ParseSubnetMaskString(tmpArray[1]);
+
+                    uint firstNetwork = GetNetworkPart(firstAddress, firstMask);
+                    uint secondNetwrok= GetNetworkPart(secondAddress, secondMask);
+
+                    Console.WriteLine($"{"First address:",INFO_ALIGN} {firstAddress.IPAddressAsString}");
+                    Console.WriteLine($"{"Second address:", INFO_ALIGN} {secondAddress.IPAddressAsString}\n");
+
+                    if (firstNetwork!= secondNetwrok)
+                    {
+                        Console.WriteLine($"The IP addresses don't belong to the same network\n");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"The IP addresses are in the same network\n");
+                    }
+                    Environment.Exit(0);
+                }
+            }
+
+            // Case 4: 4 or more arguments
+            if (args.Length > 3)
             {
                 PrintErrorMessage("Wrong number of arguments have been provided. See help below for usage\n", consoleOriginalColor);
                 PrintHelp();
@@ -291,7 +324,26 @@ namespace IP_Addresses_Calculator
             Console.WriteLine("\n******************** Other information ********************");
 
             string networkClass = GetIPv4NetworkClass(address, mask);
-            Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass}");
+            switch (networkClass)
+            {
+                case "A":
+                case "B":
+                case "C":
+                    {
+                        Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass}");
+                        break;
+                    }
+                case "D":
+                    {
+                        Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass} (multicast address)");
+                        break;
+                    }
+                case "E":
+                    {
+                        Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass} (epxerimental address)");
+                        break;
+                    }
+            }
 
             bool isLoopbackAddress = IsLoopbackAddress(address, mask);
             Console.WriteLine($"{"Loopback address",INFO_ALIGN} {isLoopbackAddress}");

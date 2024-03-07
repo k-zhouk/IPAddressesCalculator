@@ -20,8 +20,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "126.255.255.255";
             string testMask = "255.0.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             bool testLoopback = IsLoopbackAddress(addr, mask);
@@ -37,8 +37,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "127.0.0.0";
             string testMask = "255.0.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             bool testLoopback = IsLoopbackAddress(addr, mask);
@@ -59,10 +59,10 @@ namespace IPAddrCalc_Tests.NetworkClasses
 
             string testAddr = "127" + '.' + secondByte + '.' + thirdByte + '.' + fourthByte;
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             string testMask = "255.0.0.0";
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             bool isLoopback = IsLoopbackAddress(addr, mask);
@@ -78,8 +78,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "127.255.255.255";
             string testMask = "255.0.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             bool testLoopback = IsLoopbackAddress(addr, mask);
@@ -95,8 +95,8 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string testAddr = "128.0.0.0";
             string testMask = "255.0.0.0";
 
-            IPv4Address addr = ParseInputIPAddress(testAddr);
-            IPv4SubnetMask mask = ParseSubnetMaskString(testMask);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Act
             bool testLoopback = IsLoopbackAddress(addr, mask);
@@ -118,7 +118,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "9.255.255.255";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -132,7 +132,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "10.0.0.0";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -152,7 +152,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string fourthByte = ((byte)rng.Next(256)).ToString();
 
             string testAddr = "10" + '.' + secondByte + '.' + thirdByte + '.' + fourthByte;
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPriavte = IsPrivateAddress(addr);
@@ -166,7 +166,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "10.255.255.255";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -180,7 +180,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "11.0.0.0";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -202,7 +202,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "172.15.255.255";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -216,7 +216,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "172.16.0.0";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -287,7 +287,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "172.15.255.255";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -301,7 +301,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "172.16.0.0";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -321,7 +321,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
             string fourthByte = ((byte)rng.Next(256)).ToString();
 
             string testAddr = "172" + '.' + secondByte + '.' + thirdByte + '.' + fourthByte;
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPriavte = IsPrivateAddress(addr);
@@ -335,7 +335,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "172.31.255.255";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);
@@ -349,7 +349,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         {
             // Arrange
             string testAddr = "172.32.0.0";
-            IPv4Address addr = ParseInputIPAddress(testAddr);
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
 
             // Act
             bool isPrivate = IsPrivateAddress(addr);

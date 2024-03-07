@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using static IP_Addresses_Calculator.IPAddrCalcLib;
+﻿using static IP_Addresses_Calculator.IPAddrCalcLib;
 
 namespace IP_Addresses_Calculator
 {
@@ -56,21 +55,21 @@ namespace IP_Addresses_Calculator
                     Console.WriteLine($"The provided number ({n}) is greater than number of records ({records.Count}), the full history will be shown:\n");
                 }
 
-                int i = 1;
-                for (int j = 0; j < records.Count; j++)
+                int serialNumber = 1;
+                for (int i = 0; i < records.Count; i++)
                 {
-                    Console.WriteLine(i + ". " + records[j]);
-                    i++;
+                    Console.WriteLine(serialNumber + ". " + records[i]);
+                    serialNumber++;
                 }
             }
             else if (n <= records.Count)
             {
                 Console.WriteLine($"IP Address Calculator usage history:\n");
-                int i = 1;
-                for (int j = 0; j < n; j++)
+                int serialNumber = 1;
+                for (int i = 0; i < n; i++)
                 {
-                    Console.WriteLine(i + ". " + records[j]);
-                    i++;
+                    Console.WriteLine(serialNumber + ". " + records[i]);
+                    serialNumber++;
                 }
             }
         }
@@ -139,20 +138,15 @@ namespace IP_Addresses_Calculator
                 Console.WriteLine($"Error happened during history clearance:\n{e.Message}");
                 Environment.Exit(1);
             }
-
             Console.Write("The history has been cleared\n");
         }
 
         #region Private methods of the class
-        private static bool IsHistoryFileExists(string fileName)
-        {
-            return File.Exists(HISTORY_FILE_NAME) ? true : false;
-        }
 
         /// <summary>
         /// The method returns all records in the history file as a list
         /// </summary>
-        /// <returns>List<string></returns>
+        /// <returns>List of history record strings</returns>
         private static List<string> GetHistoryRecords(string historyFileName)
         {
             // A list to save history records
@@ -165,7 +159,11 @@ namespace IP_Addresses_Calculator
                     // Read all records in the history file
                     while (strReader.Peek() != -1)
                     {
-                        historyRecords.Add(strReader.ReadLine());
+                        string? line = strReader.ReadLine();
+                        if(line is not null)
+                        {
+                            historyRecords.Add(line);
+                        }
                     }
                 }
             }

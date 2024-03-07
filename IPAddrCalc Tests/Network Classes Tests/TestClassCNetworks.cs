@@ -63,7 +63,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         }
 
         [Fact]
-        public void ShouldPassForLowestClassCAddr()
+        public void ShouldBeEqualForLowestClassCAddr()
         {
             // Arrange
             string testAddr = "192.0.0.0";
@@ -80,12 +80,12 @@ namespace IPAddrCalc_Tests.NetworkClasses
         }
 
         [Fact]
-        public void ShouldPassForRandomClassCAddr()
+        public void ShouldBeEqualForRandomClassCAddr()
         {
             // Arrange
 
-            // Generation of a random B class network address
-            Random rng = new Random();
+            // Generation of a random C class network address
+            Random rng = new();
             string firstByte = ((byte)rng.Next(192, 224)).ToString();
             string secondByte = ((byte)rng.Next(256)).ToString();
             string thirdByte = ((byte)rng.Next(256)).ToString();
@@ -106,7 +106,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         }
 
         [Fact]
-        public void ShouldPassForUpmostClassCAddr()
+        public void ShouldBeEqualForUpmostClassCAddr()
         {
             // Arrange
             string testAddr = "223.255.255.255";
@@ -123,7 +123,7 @@ namespace IPAddrCalc_Tests.NetworkClasses
         }
 
         [Fact]
-        public void ShouldBeNotEqualIfGreaterThanUpmostClassBAddr()
+        public void ShouldBeNotEqualIfGreaterThanUpmostClassCAddr()
         {
             // Arrange
             string testAddr = "224.0.0.0";
