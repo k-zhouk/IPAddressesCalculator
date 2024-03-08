@@ -170,7 +170,6 @@ namespace IP_Addresses_Calculator
             }
 
             // Case 4: 3 arguments
-            // TODO: Implement
             if (args.Length == 3)
             {
                 // If the 1st argument is "-a", then try to parse the adresses and mask
