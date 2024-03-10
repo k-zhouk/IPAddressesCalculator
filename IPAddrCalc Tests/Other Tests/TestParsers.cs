@@ -13,14 +13,14 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
             string addressString = "0.0.0.0";
 
             // Act
-            IPv4Address? address= ParseInputIPAddress(addressString);
+            IPv4Address? address = ParseInputIPAddress(addressString);
 
             // Assert
             Assert.NotNull(address);
         }
 
         [Fact]
-        public void ShouldBeNotNullForValidRandomIPAddress()
+        public void ShouldBeNotNullForRandomIPAddress()
         {
             // Arrange
             // Generation of a random IPv4 network address
@@ -71,32 +71,48 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         public void ShouldBeNotNullForLowestMask()
         {
             // Arrange
-            string maskString = "0.0.0.0";
+            string testMask = "0.0.0.0";
 
             // Act
-            IPv4SubnetMask? mask = ParseSubnetMaskString(maskString);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Assert
             Assert.NotNull(mask);
         }
 
+        // Test for the non-valid mask with the last bit equal to 0
         [Fact]
-        public void ShouldBeNotNullForRandomeMask()
+        public void ShouldBeNullForNonValidMask1()
         {
             // Arrange
-            // Generation of a random mask 
-            Random rng = new();
-            string firstByte = ((byte)rng.Next(256)).ToString();
-            string secondByte = ((byte)rng.Next(256)).ToString();
-            string thirdByte = ((byte)rng.Next(256)).ToString();
-            string fourthByte = ((byte)rng.Next(256)).ToString();
 
-            string maskString = firstByte + '.' + secondByte + '.' + thirdByte + '.' + fourthByte;
+            // Subnet mask to test is "100.0.0.0"
+            // BIN: 01100100.00000000.00000000.00000000
+            // HEX: 0x64000000
+            string testMask = "100.0.0.0";
+
             // Act
-            IPv4SubnetMask? mask = ParseSubnetMaskString(maskString);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
 
             // Assert
-            Assert.NotNull(mask);
+            Assert.Null(mask);
+        }
+
+        // Test for the non-valid mask with the last bit equal to 1
+        [Fact]
+        public void ShouldBeNullForNonValidMask2()
+        {
+            // Arrange
+            // Test mask is "255.255.255.253"
+            // BIN: 11111111.11111111.11111111.11111101
+            // HEX: 0x64000000
+            string testMask = "255.255.255.253";
+
+            // Act
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
+
+            // Assert
+            Assert.Null(mask);
         }
 
         [Fact]

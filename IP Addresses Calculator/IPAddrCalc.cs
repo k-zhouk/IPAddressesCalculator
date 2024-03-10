@@ -175,21 +175,21 @@ namespace IP_Addresses_Calculator
                 // If the 1st argument is "-a", then try to parse the adresses and mask
                 if (args[0] == "-a")
                 {
-                    string[] tmpArray= args[1].Split("/");
-                    IPv4Address? firstAddress= ParseInputIPAddress(tmpArray[0]);
-                    IPv4SubnetMask? firstMask= ParseSubnetMaskString(tmpArray[1]);
+                    string[] tmpArray = args[1].Split("/");
+                    IPv4Address? firstAddress = ParseInputIPAddress(tmpArray[0]);
+                    IPv4SubnetMask? firstMask = ParseSubnetMaskString(tmpArray[1]);
 
                     tmpArray = args[2].Split("/");
                     IPv4Address? secondAddress = ParseInputIPAddress(tmpArray[0]);
                     IPv4SubnetMask? secondMask = ParseSubnetMaskString(tmpArray[1]);
 
                     uint firstNetwork = GetNetworkPart(firstAddress, firstMask);
-                    uint secondNetwrok= GetNetworkPart(secondAddress, secondMask);
+                    uint secondNetwrok = GetNetworkPart(secondAddress, secondMask);
 
                     Console.WriteLine($"{"First address:",INFO_ALIGN} {firstAddress.IPAddressAsString}");
-                    Console.WriteLine($"{"Second address:", INFO_ALIGN} {secondAddress.IPAddressAsString}\n");
+                    Console.WriteLine($"{"Second address:",INFO_ALIGN} {secondAddress.IPAddressAsString}\n");
 
-                    if (firstNetwork!= secondNetwrok)
+                    if (firstNetwork != secondNetwrok)
                     {
                         Console.WriteLine($"The IP addresses don't belong to the same network\n");
                     }
@@ -243,7 +243,7 @@ namespace IP_Addresses_Calculator
             Console.WriteLine("******************** General information ********************");
 
             Console.WriteLine($"{"IP address:",INFO_ALIGN} {address.ToString()}");
-            Console.WriteLine($"{"Subnet mask:",INFO_ALIGN} {address.ToString()} (/{mask.CIDR})");
+            Console.WriteLine($"{"Subnet mask:",INFO_ALIGN} {mask.ToString()} (/{mask.CIDR})");
             Console.WriteLine($"{"IP address (BIN):",INFO_ALIGN} {address.ToBinString()}");
             Console.WriteLine($"{"Subnet mask (BIN):",INFO_ALIGN} {mask.ToBinString()}");
 
@@ -347,7 +347,7 @@ namespace IP_Addresses_Calculator
             bool isLoopbackAddress = IsLoopbackAddress(address, mask);
             Console.WriteLine($"{"Loopback address",INFO_ALIGN} {isLoopbackAddress}");
 
-            bool isPrivateAddress = IsPrivateAddress(address);
+            bool isPrivateAddress = IsPrivateAddress(address, mask);
             Console.WriteLine($"{"Private address",INFO_ALIGN} {isPrivateAddress}");
 
             switch (mask.CIDR)

@@ -150,8 +150,8 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         }
 
         [Fact]
-        // Test for the non-valid mask with the last bit equak to 0
-        public void ShouldBeFalseForNonValidkMask1()
+        // Test for the non-valid mask with the last bit equal to 0
+        public void ShouldBeFalseForNonValidMask1()
         {
             // Arrange
             // Subnet mask to test is "100.0.0.0"
@@ -172,7 +172,7 @@ namespace IPAddrCalc_Tests.Subnet_Mask_Tests
         }
 
         [Fact]
-        // Test for the non-valid mask with the last bit equak to 1
+        // Test for the non-valid mask with the last bit equal to 1
         public void ShouldBeFalseForNonValidMask2()
         {
             // Arrange

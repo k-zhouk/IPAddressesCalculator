@@ -282,28 +282,32 @@ namespace IP_Addresses_Calculator
         /// <param name="iPv4Address">IP address</param>
         /// <param name="SubnetMask">Subnet mask</param>
         /// <returns>"Yes" if the IP address is a private one and "No" otherwise</returns>
-        public static bool IsPrivateAddress(IPv4Address iPv4Address)
+        public static bool IsPrivateAddress(IPv4Address iPv4Address, IPv4SubnetMask subnetMask)
         {
-            /* Test if the address is a private Class A address
-             * Range:       10.0.0.0 ~ 10.255.255.255 (10.0.0.0/8)
+            /* 
+             * Test if the address is a private Class A address
+             * Range:       10.0.0.0 ~ 10.255.255.255 (10/8)
              * Reference:   RFC 1918
              */
+
 
             IPv4Address? lowerAddress = ParseInputIPAddress("10.0.0.0");
             IPv4Address? upperAddress = ParseInputIPAddress("10.255.255.255");
 
-            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress)) return true;
+            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR == 8)) return true;
 
-            /* Test if the address is a private Class B address
+            /* 
+             * Test if the address is a private Class B address
              * Range:       172.16.0.0 ~ 172.31.255.255 (172.16/12)
              * Reference:   RFC 1918
             */
             lowerAddress = ParseInputIPAddress("172.16.0.0");
             upperAddress = ParseInputIPAddress("172.31.255.255");
 
-            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress)) return true;
+            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR == 12)) return true;
 
-            /* Test if the address is a private Class C address
+            /* 
+             * Test if the address is a private Class C address
              * Range:       192.168.0.0 ~ 192.168.255.255 (192.168/16 prefix)
              * Reference:   RFC 1918
             */
@@ -311,7 +315,7 @@ namespace IP_Addresses_Calculator
             lowerAddress = ParseInputIPAddress("192.168.0.0");
             upperAddress = ParseInputIPAddress("192.168.255.255");
 
-            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress)) return true;
+            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR == 16)) return true;
 
             return false;
         }
@@ -396,15 +400,16 @@ namespace IP_Addresses_Calculator
         public static bool IsSubnetMaskValid(uint mask)
         {
             // Shifting the bits to the right until we meet the 1st bit set
-            int i = 0;
-            while (mask % 2 == 0)
+            int k = 0;
+            for (int i = 0; i < 32; i++)
             {
+                if (mask % 2 != 0) break;
                 mask >>= 1;
-                i++;
+                k++;
             }
 
             // Testing every bit whether it's 1 or 0. If the bit is 0, then the mask is not valid
-            for (int j = 0; j < 32 - i; j++)
+            for (int j = 0; j < 32 - k; j++)
             {
                 if ((mask & 0x1) != 1) return false;
                 mask >>= 1;
