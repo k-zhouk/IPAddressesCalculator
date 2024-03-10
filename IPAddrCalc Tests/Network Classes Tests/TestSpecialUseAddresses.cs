@@ -202,6 +202,61 @@ namespace IPAddrCalc_Tests.NetworkClasses
             // Assert
             Assert.False(isPrivate);
         }
+
+        [Fact]
+        public void ShouldBeFalseForLowerThan8CIDRMask()
+        {
+            // Arrange
+            string testAddr = "10.20.30.40";
+            string testMask = "254.0.0.0"; // CIDR=7
+
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
+
+            // Act
+            bool isPrivate = IsPrivateAddress(addr, mask);
+
+            // Assert
+            Assert.False(isPrivate);
+        }
+
+        [Fact]
+        public void ShouldBeTrueForRandomCIDRMaskFrom9to31()
+        {
+            // Arrange
+            string testAddr = "10.20.30.40";
+
+            Random rnd = new Random();
+            int randomeCIDR = rnd.Next(9, 32);
+
+            string testMask = randomeCIDR.ToString();
+
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
+
+            // Act
+            bool isPrivate = IsPrivateAddress(addr, mask);
+
+            // Assertt
+            Assert.True(isPrivate);
+        }
+
+        [Fact]
+        public void ShouldBeTrueFor32CIDRMask()
+        {
+            // Arrange
+            string testAddr = "10.20.30.40";
+            string testMask = "255.255.255.255"; // CIDR=32
+
+            IPv4Address? addr = ParseInputIPAddress(testAddr);
+            IPv4SubnetMask? mask = ParseSubnetMaskString(testMask);
+
+            // Act
+            bool isPrivate = IsPrivateAddress(addr, mask);
+
+            // Assert
+            Assert.True(isPrivate);
+        }
         #endregion
 
         #region Tests for the 20-bit block private networks

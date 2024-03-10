@@ -3,6 +3,7 @@
     // Class to represent an IPv4 address
     public class IPv4Address
     {
+        // Some initializer to get rid of null compiler warnings
         private const uint UINT_INITIALIZER = 100500;
 
         // Default constructor
@@ -27,7 +28,7 @@
             IPAddress = tempAddress;
         }
 
-        // IP address as an int. Once is set, it triggers update of other properties of the object
+        // IP address as an uint. Once is set, it triggers update of other properties of the object
         private uint _iPAddress = UINT_INITIALIZER;
         public uint IPAddress
         {
@@ -65,6 +66,11 @@
             IPAddressAsBinString = FirstByteAsBinString + '.' + SecondByteAsBinString + '.' + ThirdByteAsBinString + '.' + FourthByteAsBinString;
         }
 
+        /// <summary>
+        /// The method converts a byte into a BIN string of 8 symbols and adds heading zeros if there are any
+        /// </summary>
+        /// <param name="inputValue"></param>
+        /// <returns></returns>
         private string ByteToBinString(byte inputValue)
         {
             string byteAsBin = Convert.ToString(inputValue, 2);
@@ -156,8 +162,11 @@
         // Overriding the ToString() method, so it returns the IP address in a standard way
         public override string ToString() => IPAddressAsString;
 
-        // Equals() and GetHash() overriding, otherwise the compiler will emit CS0660 and CS0661 warning for the overloaded operators
-        // Logically, 2 IP address objects are the same as they have the same IP address and not pointing to the same object in memory
+        /*
+         * Equals() and GetHash() overriding, otherwise the compiler will emit CS0660 and CS0661 warning for the overloaded operators
+         * Logically, 2 IP address objects are the same as they have the same IP address and not pointing to the same object in memory
+         */
+
         public override bool Equals(object? obj)
         {
             if (!(obj is IPv4Address address)) return false;
@@ -212,7 +221,9 @@
             SubnetMask = tempMask;
         }
 
-        // The method converts the subnet mask represented as an uint into the CIDR notation
+        /// <summary>
+        /// The method converts the subnet mask represented as an uint into the CIDR notation 
+        /// </summary>
         private void UintMaskToCidr()
         {
             // Calculating the number of the CIDR bits by shifting the mask to the right until we find the first 1
@@ -228,7 +239,9 @@
             CIDR = 32 - i;
         }
 
-        // The method converts the subnet mask represented in the CIDR notation into an uint number
+        /// <summary>
+        /// The method converts the subnet mask represented an the CIDR notation into an uint number 
+        /// </summary>
         private void CidrToUintMask()
         {
             // MaxValue for the uint is the a 32 bits value
@@ -257,6 +270,11 @@
             SubnetMaskBin = FirstByteBin + '.' + SecondByteBin + '.' + ThirdByteBin + '.' + FourthByteBin;
         }
 
+        /// <summary>
+        /// The method convert a byte into a BIN string with heading zeros
+        /// </summary>
+        /// <param name="inputValue"></param>
+        /// <returns></returns>
         private string ByteToBinString(byte inputValue)
         {
             string byteAsBin = Convert.ToString(inputValue, 2);

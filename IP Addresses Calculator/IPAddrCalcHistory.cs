@@ -15,9 +15,9 @@ namespace IP_Addresses_Calculator
         public const string HISTORY_FILE_NAME = "ip_history.txt";
 
         /// <summary>
-        /// Method shows usage history
+        /// The method shows usage history
         /// </summary>
-        /// <param name="n">Number of entries to show. If 0 has been provided, the full history is shown</param>
+        /// <param name="n">Number of entries to show. If case of 0, the full history is shown</param>
         public static void ShowHistory(int n)
         {
             if (n < 0)
@@ -74,6 +74,10 @@ namespace IP_Addresses_Calculator
             }
         }
 
+        /// <summary>
+        /// The methods shows one particular history record
+        /// </summary>
+        /// <param name="n">Number of record to be shown</param>
         public static void ShowHistoryRecord(int n)
         {
             if (n <= 0)
@@ -110,9 +114,9 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// Method adds a new item in the history file
+        /// The method adds a new item in the history file
         /// </summary>
-        /// <param name="newItem"></param>
+        /// <param name="newItem">IP address and subnet mask as objects</param>
         public static void AddHistoryItem(IPv4Address address, IPv4SubnetMask mask)
         {
             string histItem = address.ToString() + "/" + mask.CIDR.ToString();
@@ -124,7 +128,7 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// Method clears the program usage history
+        /// The method clears the program usage history
         /// </summary>
         public static void ClearHistory()
         {

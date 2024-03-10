@@ -23,11 +23,11 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// 
+        /// The method returns total number of IP addresses in the network
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="mask"></param>
-        /// <returns></returns>
+        /// <param name="address">IP address</param>
+        /// <param name="mask">Subnet mask</param>
+        /// <returns>Number of IP addresses in the netwrok as uint</returns>
         public static uint GetTotalNumberOfIPAddresses(IPv4SubnetMask? mask)
         {
             uint shifts = 32 - mask.CIDR;
@@ -69,7 +69,7 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// Method returns default gateway as an IPv4Address object
+        /// The method returns default gateway as an IPv4Address object
         /// </summary>
         /// <param name="address">IPv4Address</param>
         /// <param name="mask">IPv4SubnetMask</param>
@@ -92,11 +92,11 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// 
+        /// The method returns an address of the 1st host in the network
         /// </summary>
         /// <param name="address"></param>
         /// <param name="mask"></param>
-        /// <returns></returns>
+        /// <returns>The host address is returned as an IPv4Address object</returns>
         public static IPv4Address GetFirstHostAddress(IPv4Address address, IPv4SubnetMask mask)
         {
             uint firstHostAddress = (address.IPAddress & mask.SubnetMask) + 2;
@@ -105,11 +105,11 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// 
+        /// The method resturns an address of the last host in the network
         /// </summary>
         /// <param name="address"></param>
         /// <param name="mask"></param>
-        /// <returns></returns>
+        /// <returns>The host address is returned as an IPv4Address object</returns>
         public static IPv4Address GetLastHostAddress(IPv4Address address, IPv4SubnetMask mask)
         {
             IPv4Address tmpAddr = GetLastIPAddress(address, mask);
@@ -143,7 +143,7 @@ namespace IP_Addresses_Calculator
 
         #region Methods to check the class (A/ B/ C/ D/ E) of a network and the subnet mask (A/ B/ C)
         /// <summary>
-        /// The function checks the subnet mask provided and returns true if it's network class A mask and else otherwise
+        /// The function checks whether a subnet mask is the class A mask
         /// </summary>
         /// <param name="mask">IPv4SubnetMask object</param>
         /// <returns>True/ false</returns>
@@ -151,13 +151,13 @@ namespace IP_Addresses_Calculator
         {
             if (mask is not null)
             {
-                if (mask.SubnetMask == 0xFF000000) return true;
+                if (mask.SubnetMask == 0xFF000000) return true; // It's more convinient to have the mask in the HEX format
             }
             return false;
         }
 
         /// <summary>
-        /// The function checks the subnet mask provided and returns true if it's network class B mask and else otherwise
+        /// The function checks whether a subnet mask is the class B mask
         /// </summary>
         /// <param name="mask">IPv4SubnetMask object</param>
         /// <returns>True/ false</returns>
@@ -171,7 +171,7 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// The function checks the subnet mask provided and returns true if it's network class C mask and else otherwise
+        /// The function checks whether a subnet mask is the class C mask
         /// </summary>
         /// <param name="mask">IPv4SubnetMask object</param>
         /// <returns>True/ false</returns>
@@ -185,10 +185,10 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// The method returns network class (A/ B/ C/ D/ E) as a string
+        /// The method returns network class (A/ B/ C/ D/ E) as a one letter string
         /// </summary>
         /// <param name="iPv4Address"></param>
-        /// <returns>Char 'A'/ 'B'/ 'C'/ 'D'/ 'E' or information if the combination of the IPv4 address and mask is not valid</returns>
+        /// <returns>Char "A"/ "B"/ "C"/ "D"/ "E" or information if the combination of the IPv4 address and mask is not valid</returns>
         public static string GetIPv4NetworkClass(IPv4Address? iPv4Address, IPv4SubnetMask? subnetMask)
         {
             // Class A network:
@@ -294,7 +294,7 @@ namespace IP_Addresses_Calculator
             IPv4Address? lowerAddress = ParseInputIPAddress("10.0.0.0");
             IPv4Address? upperAddress = ParseInputIPAddress("10.255.255.255");
 
-            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR == 8)) return true;
+            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR >= 8)) return true;
 
             /* 
              * Test if the address is a private Class B address
@@ -304,7 +304,7 @@ namespace IP_Addresses_Calculator
             lowerAddress = ParseInputIPAddress("172.16.0.0");
             upperAddress = ParseInputIPAddress("172.31.255.255");
 
-            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR == 12)) return true;
+            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR >= 12)) return true;
 
             /* 
              * Test if the address is a private Class C address
@@ -315,7 +315,7 @@ namespace IP_Addresses_Calculator
             lowerAddress = ParseInputIPAddress("192.168.0.0");
             upperAddress = ParseInputIPAddress("192.168.255.255");
 
-            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR == 16)) return true;
+            if ((iPv4Address >= lowerAddress) && (iPv4Address <= upperAddress) && (subnetMask.CIDR >= 16)) return true;
 
             return false;
         }
@@ -395,8 +395,8 @@ namespace IP_Addresses_Calculator
         /// <summary>
         /// The method checks whether the subnet mask in a DEC format is valid
         /// </summary>
-        /// <param name="mask"></param>
-        /// <returns>The method returns true if the mask is valid and false otherwise</returns>
+        /// <param name="mask">Mask as an uint number</param>
+        /// <returns>True/ false</returns>
         public static bool IsSubnetMaskValid(uint mask)
         {
             // Shifting the bits to the right until we meet the 1st bit set
@@ -433,7 +433,7 @@ namespace IP_Addresses_Calculator
 
         #region Other methods of the program
         /// <summary>
-        /// Method prints program usage help
+        /// The method prints usage help
         /// </summary>
         public static void PrintHelp()
         {
@@ -453,7 +453,7 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// The method prints the error message in red color. After pringing, the original color of the console text is set back
+        /// The method prints the error message in red color. After printing, the original color of the console text is restored
         /// </summary>
         /// <param name="message"></param>
         /// <param name="originalColor"></param>
@@ -464,6 +464,9 @@ namespace IP_Addresses_Calculator
             Console.ForegroundColor = originalColor;
         }
 
+        /// <summary>
+        /// The method prints the exit message and waits for any key to be pressed
+        /// </summary>
         public static void PrintExitMessageAndWait()
         {
             Console.WriteLine("\nPress any key to exit...");
@@ -471,7 +474,7 @@ namespace IP_Addresses_Calculator
         }
 
         /// <summary>
-        /// Methods get version of the program
+        /// The method returns the version of the program
         /// </summary>
         /// <returns>Program version as a string</returns>
         /// <exception cref="FormatException">Exception is thrown if program version is missing in the assembly</exception>
