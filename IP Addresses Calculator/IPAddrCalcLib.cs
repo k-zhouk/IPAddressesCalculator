@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace IP_Addresses_Calculator
+﻿namespace IP_Addresses_Calculator
 {
     public static class IPAddrCalcLib
     {
@@ -428,68 +426,6 @@ namespace IP_Addresses_Calculator
             if (string.IsNullOrEmpty(inputString) || string.IsNullOrWhiteSpace(inputString)) return false;
 
             return true;
-        }
-        #endregion
-
-        #region Other methods of the program
-        /// <summary>
-        /// The method prints usage help
-        /// </summary>
-        public static void PrintHelp()
-        {
-            Console.WriteLine($"IP calculator version {GetProgramVersion()} usage:\n");
-            Console.WriteLine($"ipaddrcalc 192.168.5.100/24 OR ipaddrcalc 192.168.5.100/255.255.255.0");
-            Console.WriteLine($"\nOther options (could be both in upper and lower case):");
-            Console.WriteLine($"-v           --> for program version");
-            Console.WriteLine($"-u           --> for usage");
-            Console.WriteLine($"-h           --> for the full history");
-            Console.WriteLine($"-h N         --> for the last N history entries");
-            Console.WriteLine($"-s N         --> to show details of the Nth history item");
-            Console.WriteLine($"-c           --> to clear the history");
-            Console.WriteLine($"-m           --> convert from CIDR to 4 bytes notation and vice versa");
-            Console.WriteLine($"For the \"-m\" option use as ipaddrcalc -m 32 OR ipaddrcalc -m 255.255.0.0\n");
-            Console.WriteLine($"-a           --> to checke whether 2 addresses are on the same network");
-            Console.WriteLine($"For the \"-a\" option use as ipaddrcalc -a 100.101.102.103/24 100.101.102.1/24\n");
-        }
-
-        /// <summary>
-        /// The method prints the error message in red color. After printing, the original color of the console text is restored
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="originalColor"></param>
-        public static void PrintErrorMessage(string message, ConsoleColor originalColor)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
-            Console.ForegroundColor = originalColor;
-        }
-
-        /// <summary>
-        /// The method prints the exit message and waits for any key to be pressed
-        /// </summary>
-        public static void PrintExitMessageAndWait()
-        {
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey();
-        }
-
-        /// <summary>
-        /// The method returns the version of the program
-        /// </summary>
-        /// <returns>Program version as a string</returns>
-        /// <exception cref="FormatException">Exception is thrown if program version is missing in the assembly</exception>
-        public static string GetProgramVersion()
-        {
-            Version? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
-
-            if (assemblyVersion is null)
-            {
-                throw new FormatException("The program version is missing in the assembly");
-            }
-            else
-            {
-                return assemblyVersion.ToString();
-            }
         }
         #endregion
     }

@@ -1,215 +1,249 @@
 ﻿using static IP_Addresses_Calculator.IPAddrCalcLib;
 using static IP_Addresses_Calculator.IPAddrCalcHistory;
+using static IP_Addresses_Calculator.IPAddrCalcOthers;
 
 namespace IP_Addresses_Calculator
 {
-    internal class IPAddrCalc
+    class IPAddrCalc
     {
-        #region Constants section
-        private const int INFO_ALIGN = -45;
-        #endregion
-
         static void Main(string[] args)
         {
-            // Save original console text color
-            ConsoleColor consoleOriginalColor = Console.ForegroundColor;
+            // Print warning message
+            PrintTextInColor($"{Environment.NewLine}No warranties provided. Use at your own risk", ConsoleColor.Red);
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\nNo warranties provided. Use at your own risk");
-            Console.ForegroundColor = consoleOriginalColor;
+            Console.WriteLine($"{Environment.NewLine}******************** IP Address Calculator (ver. {GetProgramVersion()}) ********************{Environment.NewLine}");
 
-            Console.WriteLine("\n******************** IP Address Calculator (ver. {0}) ********************\n", GetProgramVersion());
-
-            // Parsing the command line arguments
-            // Case 1: no arguments
-            if (args.Length == 0)
+            // Parsing command line arguments
+            switch (args.Length)
             {
-                PrintErrorMessage("No arguments have been provided. See help for usage\n", consoleOriginalColor);
-                PrintHelp();
-                Environment.Exit(0);
-            }
+                // Case 1: no program arguments
+                case 0:
+                    PrintTextInColor($"No arguments have been provided{Environment.NewLine}", ConsoleColor.Red);
+                    PrintHelp();
+                    Environment.Exit(0);
+                    break;
 
-            IPv4Address? iPv4Address = new();
-            IPv4SubnetMask? subnetMask = new();
-
-            // Case 2: 1 argument
-            if (args.Length == 1)
-            {
-                string argParameter = args[0].ToUpper();
-
-                if (argParameter[0] == '-')
-                {
-                    switch (argParameter)
+                // Case 2: 1 program argument
+                case 1:
+                    switch (args[0].ToUpper())
                     {
-                        // Option shows the version of the program
-                        case "-V":
-                            {
-                                Console.WriteLine("IP Address Calculator version: {0}", GetProgramVersion());
-                                Environment.Exit(0);
-                                break;
-                            }
-                        // Option prints usage help
-                        case "-U":
-                            {
-                                PrintHelp();
-                                Environment.Exit(0);
-                                break;
-                            }
-                        // Option clears the usage history
+                        // Clear the usage history
                         case "-C":
-                            {
-                                ClearHistory();
-                                Environment.Exit(0);
-                                break;
-                            }
-                        // Options displays the usage history
+                            ClearHistory();
+                            Environment.Exit(0);
+                            break;
+
+                        // Display the usage history
                         case "-H":
-                            {
-                                ShowHistory(0);
-                                Environment.Exit(0);
-                                break;
-                            }
-                        // Options displays the N-th record
+                            ShowHistory(0);
+                            Environment.Exit(0);
+                            break;
+
+                        // Print help
+                        case "-U":
+                            PrintHelp();
+                            Environment.Exit(0);
+                            break;
+
+                        // Shows program version
+                        case "-V":
+                            PrintProgramVersion();
+                            Environment.Exit(0);
+                            break;
+
+                        // Checking the keys with a parameter, but the parameter is missing
+                        // Check if the "-s" key was provided without the argument
                         case "-S":
-                            {
-                                PrintErrorMessage($"History record number is missing for the \"-s\" key", consoleOriginalColor);
-                                Environment.Exit(0);
-                                break;
-                            }
+                            PrintTextInColor($"The \"-s\" key requires a numberical argument", ConsoleColor.Red);
+                            Environment.Exit(0);
+                            break;
+
+                        // Check if the "-m" key was provided without the argument
                         case "-M":
-                            {
-                                PrintErrorMessage($"Mask as a parameter is missing for the \"-m\" key", consoleOriginalColor);
-                                Environment.Exit(0);
-                                break;
-                            }
+                            PrintTextInColor($"The \"-m\" key requires a numberical argument or subnet mask", ConsoleColor.Red);
+                            Environment.Exit(0);
+                            break;
+
+                        // Checking the keys with 2 parameters, but the parameter is missing
+                        case "-A":
+                            PrintTextInColor($"The \"-a\" key requires 2 parameters (2 IP addresses with subnet masks)", ConsoleColor.Red);
+                            Environment.Exit(0);
+                            break;
+
+                        // No more keys matches, so trying to parse the argument as a IP address with a mask
                         default:
+
+                            string[] addressComponents = args[0].Split("/");
+                            if (addressComponents.Length == 2)
                             {
-                                PrintErrorMessage($"Unknown argument has been provided", consoleOriginalColor);
+                                var (iPv4Address, subnetMask) = (ParseInputIPAddress(addressComponents[0]), ParseSubnetMaskString(addressComponents[1]));
+
+                                if (iPv4Address is null)
+                                {
+                                    PrintTextInColor($"The IP address ({addressComponents[0]}) is invalid. Check the inputs", ConsoleColor.Red);
+                                    Environment.Exit(0);
+                                }
+
+                                if (subnetMask is null)
+                                {
+                                    PrintTextInColor($"The subnet mask ({addressComponents[1]}) is invalid. Check the inputs", ConsoleColor.Red);
+                                    Environment.Exit(0);
+                                }
+
+                                ProcessIPAddressAndMask(iPv4Address, subnetMask);
                                 Environment.Exit(0);
-                                break;
                             }
-                    }
-                }
-
-                string[] addressComponents = args[0].Split("/");
-
-                if (addressComponents.Length == 2)
-                {
-                    iPv4Address = ParseInputIPAddress(addressComponents[0]);
-                    if (iPv4Address is null)
-                    {
-                        PrintErrorMessage($"The IP address ({addressComponents[0]}) is invalid. Check the inputs", consoleOriginalColor);
-                        PrintExitMessageAndWait();
-                        Environment.Exit(0);
+                            break;
                     }
 
-                    subnetMask = ParseSubnetMaskString(addressComponents[1]);
-                    if (subnetMask is null)
-                    {
-                        PrintErrorMessage($"The subnet mask ({addressComponents[1]}) is invalid. Check the inputs", consoleOriginalColor);
-                        PrintExitMessageAndWait();
-                        Environment.Exit(0);
-                    }
-                }
-                ProcessIPAddressAndMask(iPv4Address, subnetMask);
-            }
-
-            // Case 3: 2 arguments have been provided
-            if (args.Length == 2)
-            {
-                // Processing the "-h" option with a numerical parameter
-                if (args[0].ToUpper() == "-H" && int.TryParse(args[1], out int historyRecords))
-                {
-                    ShowHistory(historyRecords);
-                }
-
-                // Processing the "-s" option with a numerical parameter
-                if (args[0].ToUpper() == "-S" && int.TryParse(args[1], out int recordNumber))
-                {
-                    ShowHistoryRecord(recordNumber);
+                    PrintTextInColor($"Unknown argument has been provided", ConsoleColor.Red);
                     Environment.Exit(0);
-                }
+                    break;
 
-                // Processing the "-m" option with the mask in CIDR of 4 bytes format
-                if (args[0].ToUpper() == "-M")
-                {
-                    IPv4SubnetMask? mask = ParseSubnetMaskString(args[1]);
-                    if (mask is null)
+                // Case 3: 2 program arguments
+                case 2:
+                    switch (args[0].ToUpper())
                     {
-                        PrintErrorMessage($"The mask provided is not valid\n", consoleOriginalColor);
+                        case "-H":
+                            if (int.TryParse(args[1], out int historyRecords))
+                            {
+                                ShowHistory(historyRecords);
+                            }
+                            else
+                            {
+                                PrintTextInColor($"Wrong parameter for the number of history records{Environment.NewLine}", ConsoleColor.Red);
+                            }
+                            Environment.Exit(0);
+                            break;
+
+                        case "-S":
+                            if (int.TryParse(args[1], out int recordNumber))
+                            {
+                                ShowHistoryRecord(recordNumber);
+                            }
+                            else
+                            {
+                                PrintTextInColor($"Wrong parameter for the record number{Environment.NewLine}", ConsoleColor.Red);
+                            }
+                            Environment.Exit(0);
+                            break;
+
+                        case "-M":
+                            IPv4SubnetMask? mask = ParseSubnetMaskString(args[1]);
+                            if (mask is null)
+                            {
+                                PrintTextInColor($"The mask is not valid{Environment.NewLine}", ConsoleColor.Red);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"{"The mask in 4 bytes format: ",INFO_ALIGN}{mask.ToString()}");
+                                Console.WriteLine($"{"The mask in CIDR format: ",INFO_ALIGN}{mask.CIDR.ToString()}{Environment.NewLine}");
+                            }
+                            Environment.Exit(0);
+                            break;
+
+                        // Checking the keys with 2 parameters, but the parameter is missing
+                        case "-A":
+                            PrintTextInColor($"The \"-a\" key requires 2 parameters (2 IP addresses with subnet masks)", ConsoleColor.Red);
+                            Environment.Exit(0);
+                            break;
+
+                        default:
+                            PrintTextInColor($"Unknown arguments have been provided", ConsoleColor.Red);
+                            Environment.Exit(0);
+                            break;
                     }
-                    else
+                    break;
+
+                // Case 4: 3 program arguments
+                case 3:
+                    switch (args[0].ToUpper())
                     {
-                        Console.WriteLine($"{"The mask in 4 bytes format: ",INFO_ALIGN}{mask.ToString()}");
-                        Console.WriteLine($"{"The mask in CIDR format: ",INFO_ALIGN}{mask.CIDR.ToString()}\n");
+                        case "-A":
+                            string[] tmpArray;
+
+                            var (firstAddress, firstMask) = (new IPv4Address(), new IPv4SubnetMask());
+
+                            tmpArray = args[1].Split("/");
+                            if (tmpArray.Length == 2)
+                            {
+                                (firstAddress, firstMask) = (ParseInputIPAddress(tmpArray[0]), ParseSubnetMaskString(tmpArray[1]));
+
+                                if (firstAddress is null)
+                                {
+                                    PrintTextInColor($"The first IP address ({tmpArray[0]}) is invalid", ConsoleColor.Red);
+                                    Environment.Exit(0);
+                                }
+
+                                if (firstMask is null)
+                                {
+                                    PrintTextInColor($"The first subnet mask ({tmpArray[1]}) is invalid", ConsoleColor.Red);
+                                    Environment.Exit(0);
+                                }
+                            }
+                            else
+                            {
+                                PrintTextInColor($"The first parameter is not an IP address/ subnet mask pair", ConsoleColor.Red);
+                                Environment.Exit(0);
+                            }
+
+                            var (secondAddress, secondMask) = (new IPv4Address(), new IPv4SubnetMask());
+
+                            tmpArray = args[2].Split("/");
+                            if (tmpArray.Length == 2)
+                            {
+                                (secondAddress, secondMask) = (ParseInputIPAddress(tmpArray[0]), ParseSubnetMaskString(tmpArray[1]));
+
+                                if (secondAddress is null)
+                                {
+                                    PrintTextInColor($"The second IP address ({tmpArray[0]}) is invalid", ConsoleColor.Red);
+                                    Environment.Exit(0);
+                                }
+
+                                if (secondMask is null)
+                                {
+                                    PrintTextInColor($"The second mask ({tmpArray[1]}) is invalid", ConsoleColor.Red);
+                                    Environment.Exit(0);
+                                }
+                            }
+                            else
+                            {
+                                PrintTextInColor($"The second parameter is not an IP address/ subnet mask pair", ConsoleColor.Red);
+                                Environment.Exit(0);
+                            }
+
+                            uint firstNetwork = GetNetworkPart(firstAddress, firstMask);
+                            uint secondNetwrok = GetNetworkPart(secondAddress, secondMask);
+
+                            Console.WriteLine($"{"First address:",INFO_ALIGN} {firstAddress.IPAddressAsString} /{firstMask.CIDR}");
+                            Console.WriteLine($"{"Second address:",INFO_ALIGN} {secondAddress.IPAddressAsString} /{secondMask.CIDR}{Environment.NewLine}");
+
+                            if (firstNetwork != secondNetwrok)
+                            {
+                                PrintTextInColor($"The IP addresses are not in the same network{Environment.NewLine}", ConsoleColor.Red);
+                            }
+                            else
+                            {
+                                PrintTextInColor($"The IP addresses are in the same network{Environment.NewLine}", ConsoleColor.Green);
+                            }
+                            Environment.Exit(0);
+                            break;
+
+                        default:
+                            PrintTextInColor($"Unknown arguments have been provided", ConsoleColor.Red);
+                            Environment.Exit(0);
+                            break;
                     }
+                    break;
+
+                default:
+                    PrintTextInColor($"Wrong number of arguments have been provided. See help for usage{Environment.NewLine}", ConsoleColor.Red);
+                    PrintHelp();
                     Environment.Exit(0);
-                }
-
-                // There could be a space between the IP address and the mask. Let's give it one more chance...
-                string[] addressComponents = (args[0] + args[1]).Split("/");
-
-                if (addressComponents.Length == 2)
-                {
-                    iPv4Address = ParseInputIPAddress(addressComponents[0]);
-                    if (iPv4Address is null)
-                    {
-                        PrintErrorMessage("The IP address provided is invalid. Check the inputs", consoleOriginalColor);
-                        Environment.Exit(0);
-                    }
-
-                    subnetMask = ParseSubnetMaskString(addressComponents[1]);
-                    if (subnetMask is null)
-                    {
-                        PrintErrorMessage("The subnet mask is is invalid. Check the inputs", consoleOriginalColor);
-                        Environment.Exit(0);
-                    }
-                }
-
-                ProcessIPAddressAndMask(iPv4Address, subnetMask);
+                    break;
             }
 
-            // Case 4: 3 arguments
-            if (args.Length == 3)
-            {
-                // If the 1st argument is "-a", then try to parse the adresses and mask
-                if (args[0] == "-a")
-                {
-                    string[] tmpArray = args[1].Split("/");
-                    IPv4Address? firstAddress = ParseInputIPAddress(tmpArray[0]);
-                    IPv4SubnetMask? firstMask = ParseSubnetMaskString(tmpArray[1]);
-
-                    tmpArray = args[2].Split("/");
-                    IPv4Address? secondAddress = ParseInputIPAddress(tmpArray[0]);
-                    IPv4SubnetMask? secondMask = ParseSubnetMaskString(tmpArray[1]);
-
-                    uint firstNetwork = GetNetworkPart(firstAddress, firstMask);
-                    uint secondNetwrok = GetNetworkPart(secondAddress, secondMask);
-
-                    Console.WriteLine($"{"First address:",INFO_ALIGN} {firstAddress.IPAddressAsString}");
-                    Console.WriteLine($"{"Second address:",INFO_ALIGN} {secondAddress.IPAddressAsString}\n");
-
-                    if (firstNetwork != secondNetwrok)
-                    {
-                        Console.WriteLine($"The IP addresses don't belong to the same network\n");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"The IP addresses are in the same network\n");
-                    }
-                    Environment.Exit(0);
-                }
-            }
-
-            // Case 4: 4 or more arguments
-            if (args.Length > 3)
-            {
-                PrintErrorMessage("Wrong number of arguments have been provided. See help below for usage\n", consoleOriginalColor);
-                PrintHelp();
-                Environment.Exit(0);
-            }
-
-            Console.WriteLine("\nPress any key to exit...");
+            Console.WriteLine($"{Environment.NewLine}Press any key to exit...");
             Console.ReadKey();
         }
 
@@ -221,14 +255,12 @@ namespace IP_Addresses_Calculator
             if (address.IPAddress == 0 & mask.SubnetMask != 0)
             {
                 Console.WriteLine($"The {address}/{mask.CIDR} address is ambiguous");
-                PrintExitMessageAndWait();
                 Environment.Exit(0);
             }
 
             if (address.IPAddress == 0 & mask.SubnetMask == 0)
             {
                 Console.WriteLine($"The {address}/{mask.CIDR} means the \"default rout\" in the network setup");
-                PrintExitMessageAndWait();
                 Environment.Exit(0);
             }
 
@@ -236,16 +268,15 @@ namespace IP_Addresses_Calculator
             if (address.IPAddress != 0 & mask.SubnetMask == 0)
             {
                 Console.WriteLine($"For the IP address {address}/{mask.CIDR} the network interface is not bound to any network");
-                PrintExitMessageAndWait();
                 Environment.Exit(0);
             }
 
-            Console.WriteLine("******************** General information ********************");
+            Console.WriteLine($"******************** General information ********************");
 
             Console.WriteLine($"{"IP address:",INFO_ALIGN} {address.ToString()}");
             Console.WriteLine($"{"Subnet mask:",INFO_ALIGN} {mask.ToString()} (/{mask.CIDR})");
-            Console.WriteLine($"{"IP address (BIN):",INFO_ALIGN} {address.ToBinString()}");
-            Console.WriteLine($"{"Subnet mask (BIN):",INFO_ALIGN} {mask.ToBinString()}");
+            Console.WriteLine($"{"IP address (BIN):",INFO_ALIGN} {address.IPAddressAsBinString}");
+            Console.WriteLine($"{"Subnet mask (BIN):",INFO_ALIGN} {mask.SubnetMaskAsBinString}");
 
             Console.WriteLine();
 
@@ -254,6 +285,7 @@ namespace IP_Addresses_Calculator
 
             switch (mask.CIDR)
             {
+                // Masks /32, /31, /30 should be processed separately
                 case 32:
                     {
                         // For the /32 mask the whole address is a network address, so there are no host addresses
@@ -320,7 +352,7 @@ namespace IP_Addresses_Calculator
                     }
             }
 
-            Console.WriteLine("\n******************** Other information ********************");
+            Console.WriteLine($"{Environment.NewLine}******************** Other information ********************");
 
             string networkClass = GetIPv4NetworkClass(address, mask);
             switch (networkClass)
@@ -328,20 +360,15 @@ namespace IP_Addresses_Calculator
                 case "A":
                 case "B":
                 case "C":
-                    {
-                        Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass}");
-                        break;
-                    }
+                    Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass}");
+                    break;
+
                 case "D":
-                    {
-                        Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass} (multicast address)");
-                        break;
-                    }
+                    Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass} (multicast address)");
+                    break;
                 case "E":
-                    {
-                        Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass} (epxerimental address)");
-                        break;
-                    }
+                    Console.WriteLine($"{"Network class:",INFO_ALIGN} {networkClass} (epxerimental address)");
+                    break;
             }
 
             bool isLoopbackAddress = IsLoopbackAddress(address, mask);
@@ -353,15 +380,11 @@ namespace IP_Addresses_Calculator
             switch (mask.CIDR)
             {
                 case 32:
-                    {
-                        Console.WriteLine($"{"Subnet mask is /32",INFO_ALIGN} VPN?");
-                        break;
-                    }
+                    Console.WriteLine($"{"Subnet mask is /32",INFO_ALIGN} VPN?");
+                    break;
                 case 31:
-                    {
-                        Console.WriteLine($"{"Subnet mask is /31",INFO_ALIGN} RFC 3021. Both addresses are host addresses");
-                        break;
-                    }
+                    Console.WriteLine($"{"Subnet mask is /31",INFO_ALIGN} RFC 3021. Both addresses are host addresses");
+                    break;
             }
         }
     }
